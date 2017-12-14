@@ -17,7 +17,11 @@ class TestScout2Class:
     def setup(self):
         configPrintException(True)
         creds = read_creds_from_environment_variables()
-        self.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
+
+        if 'AWS_PROFILE' in os.environ:
+            self.profile_name = os.environ['AWS_PROFILE']
+        else:
+            self.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
 
 
     def call_scout2(self, args):
@@ -47,6 +51,14 @@ class TestScout2Class:
     #
     def test_scout2_default_run(self):
         rc = self.call_scout2([])
+        assert (rc == 0)
+
+
+    #
+    # Make sure that Scout2's default run does not crash
+    #
+    def test_scout2_cis_run(self):
+        rc = self.call_scout2(["--ruleset", "cis-02-29-2016.json"])
         assert (rc == 0)
 
 
