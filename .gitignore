@@ -58,3 +58,6 @@ report-*
 
 # Emacs backups
 *~
+
+# Direnv
+.envrc
